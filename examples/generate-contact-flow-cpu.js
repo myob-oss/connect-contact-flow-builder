@@ -2,18 +2,14 @@ const fs = require('fs');
 const path = require('path');
 
 const { buildContactFlow } = require('../src');
-const {
-  PlayPromptNode,
-  InvokeExternalResourceNode,
-  SetAttributesNode,
-  DisconnectNode,
-  CheckExternalAttributeNode,
-  StoreUserInputCreditCardNode,
-  StoreUserInputCustomNode,
-  StoreUserInputLocalPhoneAuNode,
-  SetWorkingQueueNode,
-  TransferToQueueNode,
-} = require('../src/node');
+const PlayPrompt = require('../src/node/PlayPrompt');
+const Disconnect = require('../src/node/Disconnect');
+const SetAttributes = require('../src/node/SetAttributes');
+const InvokeExternalResource = require('../src/node/InvokeExternalResource');
+const CheckExternalAttribute = require('../src/node/CheckExternalAttribute');
+const { StoreUserInputCustom, StoreUserInputPhone } = require('../src/node/StoreUserInput');
+const SetWorkingQueue = require('../src/node/SetWorkingQueue');
+const TransferToQueue = require('../src/node/TransferToQueue');
 
 const cwd = process.cwd();
 if (process.argv.length < 3) {
@@ -39,97 +35,122 @@ if (process.argv[3]) {
 
 /// --------------------------------------------------------------------------------------------------------------------
 
-function errorHandler(handlerNode, panicNode) {
-  return (errorType) => new SetAttributesNode()
-    .setTextAttribute('Error', errorType)
-    .setSuccessBranch(handlerNode)
-    .setErrorBranch(panicNode);
-}
-
-function userInputNodeProcessor(mainNode, handleError) {
-  return (storeUserInputNode) => storeUserInputNode && storeUserInputNode
-    .setSuccessBranch(
-      new SetAttributesNode()
-        .setDynamicSystemAttribute('$.External.StoreCustomerInputDestinationKey', 'Stored customer input')
-        .setSuccessBranch(mainNode)
-        .setErrorBranch(handleError('SetContactAttributesError'))
-    )
-    .setErrorBranch(handleError('StoreCustomerInputError'));
-}
-
-function generateContactFlowCpu(lambdaArn) {
-  const mainNode = new InvokeExternalResourceNode(lambdaArn, 8);
-  const exitUnrecoverableNode = new PlayPromptNode('There was an unrecoverable error', new DisconnectNode());
+/**
+ * @param {string} functionArn - The ARN of the CPU Lambda which runs the IVR programs.
+ * @returns {*}
+ */
+function generateContactFlowCpu(functionArn) {
+  const mainNode = new InvokeExternalResource({ functionArn, timeLimit: 8 });
+  const exitUnrecoverableNode = new PlayPrompt({
+    text: 'There was an unrecoverable error',
+    successBranch: new Disconnect(),
+  });
   mainNode.setErrorBranch(exitUnrecoverableNode);
 
-  const handleError = errorHandler(mainNode, exitUnrecoverableNode);
-  const processUserInputNode = userInputNodeProcessor(mainNode, handleError);
+  function handleError(errorType) {
+    return new SetAttributes({
+      successBranch: mainNode,
+      errorBranch: exitUnrecoverableNode,
+    })
+      .addTextAttribute('Error', errorType);
+  }
+
+  function processUserInputNode(storeUserInputNode) {
+    return storeUserInputNode && storeUserInputNode
+      .setSuccessBranch(
+        new SetAttributes({
+          successBranch: mainNode,
+          errorBranch: handleError('SetContactAttributesError'),
+        })
+          .addDynamicSystemAttribute('$.External.StoreCustomerInputDestinationKey', 'Stored customer input')
+      )
+      .setErrorBranch(handleError('StoreCustomerInputError'));
+  }
 
   const commandRouterNode =
-    new CheckExternalAttributeNode('Command')
-      .setEqualsBranch(
+    new CheckExternalAttribute({ externalAttributeName: 'Command' })
+      .addEqualsBranch(
         'PlayPrompt',
-        new PlayPromptNode()
-          .setTextToSpeechType('ssml')
-          .setTextExternalAttribute('PlayPromptText')
-          .setSuccessBranch(mainNode)
+        new PlayPrompt({
+          textExternalAttribute: 'PlayPromptText',
+          textToSpeechType: 'ssml',
+          successBranch: mainNode,
+        }),
       )
-      .setEqualsBranch(
+      .addEqualsBranch(
         'SetContactAttribute',
-        new SetAttributesNode()
-          .setDynamicExternalAttribute('$.External.AttributeKey', 'AttributeValue')
-          .setSuccessBranch(mainNode)
-          .setErrorBranch(handleError('SetContactAttributesError'))
+        new SetAttributes({
+          successBranch: mainNode,
+          errorBranch: handleError('SetContactAttributesError'),
+        })
+          .addDynamicExternalAttribute('$.External.AttributeKey', 'AttributeValue')
       )
-      .setEqualsBranch(
+      .addEqualsBranch(
         'StoreCustomerInput',
-        processUserInputNode(new StoreUserInputCreditCardNode().setTextToSpeechType('ssml'))
+        processUserInputNode(new StoreUserInputCustom({
+          textExternalAttribute: 'StoreCustomerInputPromptText',
+          textToSpeechType: 'ssml',
+          maxDigits: 16,
+          encryptEntry: true,
+          encryptionKeyIdExternalAttribute: 'EncryptionKeyID',
+          encryptionKeyExternalAttribute: 'EncryptionCertificate',
+        }))
       )
-      .setEqualsBranch(
+      .addEqualsBranch(
         'StoreCustomerInputUnencrypted',
-        processUserInputNode(new StoreUserInputCustomNode().setTextToSpeechType('ssml'))
+        processUserInputNode(new StoreUserInputCustom({
+          textExternalAttribute: 'StoreCustomerInputPromptText',
+          textToSpeechType: 'ssml',
+        }))
       )
-      .setEqualsBranch(
+      .addEqualsBranch(
         'StoreCustomerInputLocalPhoneNumber',
         processUserInputNode(
-          new StoreUserInputLocalPhoneAuNode()
-            .setTextToSpeechType('ssml')
-            .setInvalidNumberBranch(handleError('StoreCustomerInputInvalidNumber'))
+          new StoreUserInputPhone({
+            textExternalAttribute: 'StoreCustomerInputPromptText',
+            textToSpeechType: 'ssml',
+            countryCode: 'AU',
+            invalidNumberBranch: handleError('StoreCustomerInputInvalidNumber')
+          })
         )
       )
-      .setEqualsBranch(
+      .addEqualsBranch(
         'TransferToQueue',
-        new SetWorkingQueueNode()
-          .setQueueArnExternalAttribute('QueueArn')
-          .setSuccessBranch(
-            new PlayPromptNode()
-              .setTextToSpeechType('ssml')
-              .setTextExternalAttribute('PreTransferPromptText')
-              .setSuccessBranch(
-                new TransferToQueueNode()
-                  .setAtCapacityBranch(handleError('TransferToQueueAtCapacity'))
-                  .setErrorBranch(handleError('TransferToQueueError'))
-              )
-          )
-          .setErrorBranch(handleError('SetWorkingQueueError'))
+        new SetWorkingQueue({
+          queueArnExternalAttribute: 'QueueArn',
+          errorBranch: handleError('SetWorkingQueueError'),
+          successBranch: new PlayPrompt({
+            textToSpeechType: 'ssml',
+            textExternalAttribute: 'PreTransferPromptText',
+            successBranch: new TransferToQueue({
+              atCapacityBranch: handleError('TransferToQueueAtCapacity'),
+              errorBranch: handleError('TransferToQueueError'),
+            })
+          })
+        })
       )
-      .setEqualsBranch(
+      .addEqualsBranch(
         'CompleteCall',
-        new PlayPromptNode()
-          .setTextToSpeechType('ssml')
-          .setTextExternalAttribute('CompleteCallText')
-          .setSuccessBranch(new DisconnectNode())
+        new PlayPrompt({
+          textToSpeechType: 'ssml',
+          textExternalAttribute: 'CompleteCallText',
+          successBranch: new Disconnect(),
+        })
       )
-      .setNoMatchBranch(new PlayPromptNode('Unrecognized command', exitUnrecoverableNode));
+      .setNoMatchBranch(new PlayPrompt({
+        text: 'Unrecognized command',
+        successBranch: exitUnrecoverableNode,
+      }));
 
-  const setBaseAttributesNode = new SetAttributesNode()
-    .setDynamicExternalAttribute('SuccessHandler', 'SuccessHandler')
-    .setDynamicExternalAttribute('ErrorHandler', 'ErrorHandler')
-    .setDynamicExternalAttribute('Program', 'Program')
-    .setDynamicExternalAttribute('Error', 'Error')
-    .setSuccessBranch(commandRouterNode)
-    .setErrorBranch(exitUnrecoverableNode);
+  const setBaseAttributesNode = new SetAttributes({
+    successBranch: commandRouterNode,
+    errorBranch: exitUnrecoverableNode,
+  })
+    .addDynamicExternalAttribute('SuccessHandler', 'SuccessHandler')
+    .addDynamicExternalAttribute('ErrorHandler', 'ErrorHandler')
+    .addDynamicExternalAttribute('Program', 'Program')
+    .addDynamicExternalAttribute('Error', 'Error');
   mainNode.setSuccessBranch(setBaseAttributesNode);
 
   return buildContactFlow(mainNode);
-};
+}

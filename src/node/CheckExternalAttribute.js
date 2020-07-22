@@ -1,26 +1,34 @@
 const { v4: uuid } = require('uuid');
 const ContactFlowNode = require('./ContactFlowNode');
 
-module.exports = class CheckExternalAttributeNode extends ContactFlowNode {
-  constructor(attributeName) {
+/**
+ * @typedef CheckExternalAttributeOptions
+ * @property {string} externalAttributeName
+ */
+
+module.exports = class CheckExternalAttribute extends ContactFlowNode {
+  /**
+   * @param {CheckExternalAttributeOptions} [options]
+   */
+  constructor(options = {}) {
     super('CheckAttribute');
     this.setNoMatchBranch(null);
-    this.setParameter('Attribute', attributeName);
+    this.setParameter('Attribute', options.externalAttributeName);
     this.setParameter('Namespace', 'External');
   }
 
   /**
    * @param {ContactFlowNode} node
-   * @returns {CheckExternalAttributeNode}
+   * @returns {CheckExternalAttribute}
    */
   setNoMatchBranch = node => this.setBranch('NoMatch', node);
 
   /**
    * @param {string} matchValue
    * @param {ContactFlowNode} node
-   * @returns {CheckExternalAttributeNode}
+   * @returns {CheckExternalAttribute}
    */
-  setEqualsBranch = (matchValue, node) => this.addBranch({
+  addEqualsBranch = (matchValue, node) => this.addBranch({
     condition: 'Evaluate',
     conditionType: 'Equals',
     conditionValue: matchValue,
