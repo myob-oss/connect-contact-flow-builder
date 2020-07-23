@@ -8,7 +8,7 @@
     "./": "./src/node/"
   },
   "bin": {
-    "buildContactFlow": "./src/buildContactFlowCli.js"
+    "build-contact-flow": "./src/buildContactFlowCli.js"
   },
   "scripts": {
     "test": "jest"

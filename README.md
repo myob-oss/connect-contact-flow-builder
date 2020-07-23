@@ -31,10 +31,10 @@ module.exports = (companyName) => {
 };
 ```
 
-Then, run `buildContactFlow` to generate a configuration JSON:
+Then, run `build-contact-flow` to generate a configuration JSON:
 
 ```shell script
-buildContactFlow simpleGreeting.js "My Company" > simpleGreeting.json
+build-contact-flow simpleGreeting.js "My Company" > simpleGreeting.json
 ```
 
 Finally, import the generated JSON into Connect:

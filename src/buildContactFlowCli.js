@@ -37,13 +37,13 @@ function parseArgs(processArgs) {
 
 const args = parseArgs(process.argv);
 if (args.help || !args.sourcePath) {
-  process.stderr.write(`Usage: buildContactFlow [...options] sourcePath [...builderArgs]
+  process.stderr.write(`Usage: build-contact-flow [...options] sourcePath [...builderArgs]
 
 Import JavaScript module from sourcePath, pass builderArgs as positional
 arguments to the exported function and print the returned object to stdout.
 
 Example:
-  buildContactFlow ./flowDefinition.js $LAMBDA_ARN
+  build-contact-flow ./flowDefinition.js $LAMBDA_ARN
     
 Options:
   -h, --help          Print command line usage info 
@@ -77,4 +77,4 @@ It returned a value of type "${typeof result}".
   process.exit(1);
 }
 
-process.stdout.write(JSON.stringify(buildContactFlow(result)) + '\n');
+console.log(JSON.stringify(buildContactFlow(result)));
