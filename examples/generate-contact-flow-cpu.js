@@ -1,7 +1,3 @@
-const fs = require('fs');
-const path = require('path');
-
-const { buildContactFlow } = require('../src');
 const PlayPrompt = require('../src/node/PlayPrompt');
 const Disconnect = require('../src/node/Disconnect');
 const SetAttributes = require('../src/node/SetAttributes');
@@ -11,35 +7,11 @@ const { StoreUserInputCustom, StoreUserInputPhone } = require('../src/node/Store
 const SetWorkingQueue = require('../src/node/SetWorkingQueue');
 const TransferToQueue = require('../src/node/TransferToQueue');
 
-const cwd = process.cwd();
-if (process.argv.length < 3) {
-  const invocation = `node .${process.argv[1].slice(cwd.length)}`;
-  console.log('Invalid invocation');
-  console.log('');
-  console.log(`Usage: ${invocation} LAMBDA_ARN [OUTPUT_PATH]`);
-  console.log('Generate the Contact Flow CPU for LAMBDA_ARN and write it to stdout');
-  console.log('or OUTPUT_PATH if specified.');
-  process.exit(1);
-}
-
-const lambdaArn = process.argv[2];
-const output = JSON.stringify(generateContactFlowCpu(lambdaArn));
-if (process.argv[3]) {
-  console.log('Write file to', process.argv[3]);
-  fs.writeFileSync(path.resolve(process.argv[3]), output);
-  process.exit(0);
-} else {
-  console.log(output);
-  process.exit(0);
-}
-
-/// --------------------------------------------------------------------------------------------------------------------
-
 /**
  * @param {string} functionArn - The ARN of the CPU Lambda which runs the IVR programs.
- * @returns {*}
+ * @returns {ContactFlowNode}
  */
-function generateContactFlowCpu(functionArn) {
+module.exports = function generateContactFlowCpu(functionArn) {
   const mainNode = new InvokeExternalResource({ functionArn, timeLimit: 8 });
   const exitUnrecoverableNode = new PlayPrompt({
     text: 'There was an unrecoverable error',
@@ -152,5 +124,5 @@ function generateContactFlowCpu(functionArn) {
     .addDynamicExternalAttribute('Error', 'Error');
   mainNode.setSuccessBranch(setBaseAttributesNode);
 
-  return buildContactFlow(mainNode);
-}
+  return mainNode;
+};
