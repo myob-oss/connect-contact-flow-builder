@@ -107,7 +107,7 @@ class StoreUserInputPhone extends __AbstractStoreUserInputNode {
    */
   constructor(options) {
     super(options);
-    this.setInvalidNumberBranch(null);
+    this.setInvalidNumberBranch(options.invalidNumberBranch || null);
     this.setCountryCode(options.countryCode);
     this.setParameter('CustomerInputType', 'PhoneNumber');
     this.setParameter('PhoneNumberFormat', this.__normalizePhoneNumberFormat(options.phoneNumberFormat));
