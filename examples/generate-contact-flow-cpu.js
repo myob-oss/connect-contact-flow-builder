@@ -6,6 +6,7 @@ const CheckExternalAttribute = require('../src/node/CheckExternalAttribute');
 const { StoreUserInputCustom, StoreUserInputPhone } = require('../src/node/StoreUserInput');
 const SetWorkingQueue = require('../src/node/SetWorkingQueue');
 const TransferToQueue = require('../src/node/TransferToQueue');
+const GetCustomerInput = require('../src/node/GetCustomerInput');
 
 /**
  * @param {string} functionArn - The ARN of the CPU Lambda which runs the IVR programs.
@@ -100,6 +101,31 @@ module.exports = function generateContactFlowCpu(functionArn) {
             })
           })
         })
+      )
+      .addEqualsBranch(
+        'GetCustomerInputDigit',
+        new GetCustomerInput({
+          textToSpeechType: 'ssml',
+          textExternalAttribute: 'PromptText',
+          errorBranch: handleError('GetCustomerInputError'),
+          // TODO
+          noMatchBranch: exitUnrecoverableNode,
+          timeoutBranch: exitUnrecoverableNode,
+        })
+          .addEqualsBranch(
+            1,
+            new SetAttributes({
+              successBranch: mainNode,
+              errorBranch: handleError('SetContactAttributesError'),
+            }).addTextAttribute('$.External.GetCustomerInputDestinationKey', '1')
+          )
+          .addEqualsBranch(
+            2,
+            new SetAttributes({
+              successBranch: mainNode,
+              errorBranch: handleError('SetContactAttributesError'),
+            }).addTextAttribute('$.External.GetCustomerInputDestinationKey', '2')
+          )
       )
       .addEqualsBranch(
         'CompleteCall',

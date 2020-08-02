@@ -1,7 +1,7 @@
 const COLUMN_COUNT = 6;
 
 function buildContactFlow(startNode) {
-  let index = -1;
+  let index = -4;
 
   /**
    * @param {ContactFlowNode|null} node
@@ -15,8 +15,8 @@ function buildContactFlow(startNode) {
       ...builtNode,
       metadata: {
         position: {
-          x: 15.5 + 150 + 250 * (index % COLUMN_COUNT),
-          y: 15.5 + 250 * Math.floor(index / COLUMN_COUNT),
+          x: 15.5 + 150 + 250 * (index < 0 ? index + 3 : (index % COLUMN_COUNT + 3)),
+          y: 15.5 + 250 * Math.floor(index < 0 ? 0 : index / COLUMN_COUNT),
         },
         ...builtNode.metadata,
       },
@@ -41,7 +41,7 @@ function buildContactFlow(startNode) {
     metadata: {
       entryPointPosition: { x: 15.5, y: 15.5 },
       snapToGrid: false,
-      name: '*Actually Generated',
+      name: '*Generated Contact Flow',
       description: null,
       type: 'contactFlow',
       status: 'saved',
@@ -59,3 +59,4 @@ module.exports.SetWorkingQueue = require('./node/SetWorkingQueue');
 module.exports.TransferToQueue = require('./node/TransferToQueue');
 module.exports.StoreUserInputCustom = require('./node/StoreUserInput').StoreUserInputCustom;
 module.exports.StoreUserInputPhone = require('./node/StoreUserInput').StoreUserInputPhone;
+module.exports.GetCustomerInput = require('./node/GetCustomerInput');
