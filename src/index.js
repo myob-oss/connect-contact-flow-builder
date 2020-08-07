@@ -60,3 +60,4 @@ module.exports.TransferToQueue = require('./node/TransferToQueue');
 module.exports.StoreUserInputCustom = require('./node/StoreUserInput').StoreUserInputCustom;
 module.exports.StoreUserInputPhone = require('./node/StoreUserInput').StoreUserInputPhone;
 module.exports.GetCustomerInput = require('./node/GetCustomerInput');
+module.exports.Transfer = require('./node/Transfer');
