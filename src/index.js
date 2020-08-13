@@ -1,6 +1,11 @@
 const COLUMN_COUNT = 6;
 
-function buildContactFlow(startNode) {
+/**
+ * @param {string} flowName
+ * @param {ContactFlowNode} startNode
+ * @returns {*}
+ */
+function buildContactFlow(flowName, startNode) {
   let index = -4;
 
   /**
@@ -9,7 +14,7 @@ function buildContactFlow(startNode) {
    */
   function mapNode(node) {
     index++;
-    const builtNode = node.build();
+    const builtNode = node && node.build();
 
     return {
       ...builtNode,
@@ -41,7 +46,7 @@ function buildContactFlow(startNode) {
     metadata: {
       entryPointPosition: { x: 15.5, y: 15.5 },
       snapToGrid: false,
-      name: '*Generated Contact Flow',
+      name: flowName,
       description: null,
       type: 'contactFlow',
       status: 'saved',

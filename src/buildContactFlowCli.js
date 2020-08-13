@@ -17,7 +17,7 @@ const buildContactFlow = require('./');
  */
 function parseArgs(processArgs) {
   const args = processArgs.slice(2);
-  let result = { help: false, unknownArgs: [], generateArgs: [], sourcePath: '' };
+  let result = { help: false, unknownArgs: [], generateArgs: [], flowName: '', sourcePath: '' };
   for (let index = 0; index < args.length; index++) {
     const arg = args[index];
     if (arg[0] === '-') {
@@ -26,6 +26,8 @@ function parseArgs(processArgs) {
       } else {
         result.unknownArgs.push(arg);
       }
+    } else if (!result.flowName) {
+      result.flowName = arg;
     } else if (!result.sourcePath) {
       result.sourcePath = arg;
     } else {
@@ -36,14 +38,15 @@ function parseArgs(processArgs) {
 }
 
 const args = parseArgs(process.argv);
-if (args.help || !args.sourcePath) {
-  process.stderr.write(`Usage: build-contact-flow [...options] sourcePath [...builderArgs]
+if (args.help || !args.flowName || !args.sourcePath) {
+  process.stderr.write(`Usage: build-contact-flow [...options] flowName sourcePath [...builderArgs]
 
-Import JavaScript module from sourcePath, pass builderArgs as positional
-arguments to the exported function and print the returned object to stdout.
+Generate a contact flow named "flowName". Import the JavaScript module at 
+"sourcePath" and pass [...builderArgs] as positional arguments to the exported
+function. Serialize the returned object to JSON and print to stdout.
 
 Example:
-  build-contact-flow ./flowDefinition.js $LAMBDA_ARN
+  build-contact-flow 'Main Flow' ./flowDefinition.js $LAMBDA_ARN
     
 Options:
   -h, --help          Print command line usage info 
@@ -77,4 +80,4 @@ It returned a value of type "${typeof result}".
   process.exit(1);
 }
 
-console.log(JSON.stringify(buildContactFlow(result)));
+console.log(JSON.stringify(buildContactFlow(args.flowName, result)));

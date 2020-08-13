@@ -8,6 +8,7 @@ const ContactFlowNode = require('./ContactFlowNode');
  * @property {string} [textExternalAttribute]
  * @property {string} [text]
  * @property {number} [maxDigits]
+ * @property {number} [timeout] - The timeout before first entry in seconds.
  */
 
 class __AbstractStoreUserInputNode extends ContactFlowNode {
@@ -22,7 +23,7 @@ class __AbstractStoreUserInputNode extends ContactFlowNode {
 
     this.setSuccessBranch(options.successBranch || null);
     this.setErrorBranch(options.errorBranch || null);
-    this.setParameter('Timeout', '5');
+    this.setTimeout(options.timeout || 5);
     this.setMaxDigits(options.maxDigits || 20);
     this.setTextToSpeechType(this.__normalizeTextToSpeechType(options.textToSpeechType));
     if (options.text) {
@@ -61,6 +62,12 @@ class __AbstractStoreUserInputNode extends ContactFlowNode {
    * @returns {ContactFlowNode}
    */
   setMaxDigits = maxDigits => this.setParameter('MaxDigits', maxDigits);
+
+  /**
+   * @param {number} timeout
+   * @returns {ContactFlowNode}
+   */
+  setTimeout = timeout => this.setParameter('Timeout', timeout.toString());
 }
 
 /**
