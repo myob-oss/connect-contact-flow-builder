@@ -20,7 +20,7 @@
   "author": "Cody Jenkins <cjenkins@dius.com.au>",
   "license": "MIT",
   "devDependencies": {
-    "jest": "^26.1.0"
+    "jest": "^26.4.2"
   },
   "dependencies": {
     "uuid": "^8.2.0"

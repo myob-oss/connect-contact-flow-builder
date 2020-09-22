@@ -1,5 +1,5 @@
 const { v4: uuid } = require('uuid');
-const ContactFlowNode = require('./ContactFlowNode');
+const ContactFlowNode = require('../AbstractNode');
 
 /**
  * @typedef CheckExternalAttributeOptions

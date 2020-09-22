@@ -1,4 +1,4 @@
-const ContactFlowNode = require('./ContactFlowNode');
+const ContactFlowNode = require('../AbstractNode');
 
 /**
  * @typedef SetAttributesOptions

@@ -3,7 +3,7 @@ const { v4: uuid } = require('uuid');
 /**
  * @typedef ContactFlowBranch
  * @property {BranchCondition} condition
- * @property {ContactFlowNode} node
+ * @property {AbstractNode} node
  */
 
 /**
@@ -17,20 +17,20 @@ const { v4: uuid } = require('uuid');
  */
 
 /**
- * @typedef {ContactFlowNode} BuiltContactFlowNode
+ * @typedef {AbstractNode} BuiltContactFlowNode
  * @property {BuiltContactFlowBranch[]} branches
  * @property {{}} metadata
  */
 
 /**
- * @class ContactFlowNode
+ * @class AbstractNode
  * @property {string} id
  * @property {string} type
  * @property {ContactFlowBranch[]} branches
  * @property {ContactFlowParameter[]} parameters
  * @property {*} metadata
  */
-module.exports = class ContactFlowNode {
+module.exports = class AbstractNode {
   constructor(type) {
     this.id = uuid();
     this.type = type;
@@ -60,8 +60,8 @@ module.exports = class ContactFlowNode {
 
   /**
    * @param {BranchCondition|string} condition
-   * @param {ContactFlowNode} node
-   * @returns {ContactFlowNode}
+   * @param {AbstractNode} node
+   * @returns {AbstractNode}
    */
   setBranch(condition, node) {
     condition = this.__normalizeBranchCondition(condition);
@@ -75,8 +75,8 @@ module.exports = class ContactFlowNode {
 
   /**
    * @param {BranchCondition|string} condition
-   * @param {ContactFlowNode} node
-   * @returns {ContactFlowNode}
+   * @param {AbstractNode} node
+   * @returns {AbstractNode}
    */
   addBranch(condition, node) {
     condition = this.__normalizeBranchCondition(condition);
@@ -99,7 +99,7 @@ module.exports = class ContactFlowNode {
   /**
    * @param {string} name
    * @param {ContactFlowParameter|string|number|boolean} value
-   * @returns {ContactFlowNode}
+   * @returns {AbstractNode}
    */
   setParameter(name, value) {
     value = this.__normalizeParameterValue(value);
@@ -114,7 +114,7 @@ module.exports = class ContactFlowNode {
   /**
    * @param {string} name
    * @param {ContactFlowParameter|string|number|boolean} value
-   * @returns {ContactFlowNode}
+   * @returns {AbstractNode}
    */
   addParameter(name, value) {
     value = this.__normalizeParameterValue(value);
@@ -131,4 +131,24 @@ module.exports = class ContactFlowNode {
       branches: this.branches.map(({ condition, node }) => ({ ...condition, transition: node && node.id })),
     };
   }
+};
+
+const namespaceAllowedValues = {
+  System: new Set([
+    'Customer Number',
+    'Dialed Number',
+    'Customer callback number',
+    'Stored customer input',
+    'Queue.Name',
+    'Queue.ARN',
+    'Queue.OutboundCallerId.Address',
+    'TextToSpeechVoiceId',
+    'ContactId',
+    'InitialContactId',
+    'PreviousContactId',
+    'Channel',
+    'InstanceARN',
+    'InitiationMethod',
+    'Lex.IntentName',
+  ])
 };

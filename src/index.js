@@ -55,14 +55,5 @@ function buildContactFlow(flowName, startNode) {
 }
 
 module.exports = buildContactFlow;
-module.exports.PlayPrompt = require('./node/PlayPrompt');
-module.exports.Disconnect = require('./node/Disconnect');
-module.exports.SetAttributes = require('./node/SetAttributes');
-module.exports.InvokeExternalResource = require('./node/InvokeExternalResource');
-module.exports.CheckExternalAttribute = require('./node/CheckExternalAttribute');
-module.exports.SetWorkingQueue = require('./node/SetWorkingQueue');
-module.exports.TransferToQueue = require('./node/TransferToQueue');
-module.exports.StoreUserInputCustom = require('./node/StoreUserInput').StoreUserInputCustom;
-module.exports.StoreUserInputPhone = require('./node/StoreUserInput').StoreUserInputPhone;
-module.exports.GetCustomerInput = require('./node/GetCustomerInput');
-module.exports.Transfer = require('./node/Transfer');
+
+module.exports.PlayPrompt = require('./node/interact/PlayPrompt');

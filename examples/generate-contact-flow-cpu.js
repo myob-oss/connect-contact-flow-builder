@@ -1,12 +1,12 @@
-const PlayPrompt = require('../src/node/PlayPrompt');
-const Disconnect = require('../src/node/Disconnect');
-const SetAttributes = require('../src/node/SetAttributes');
-const InvokeExternalResource = require('../src/node/InvokeExternalResource');
-const CheckExternalAttribute = require('../src/node/CheckExternalAttribute');
-const { StoreUserInputCustom, StoreUserInputPhone } = require('../src/node/StoreUserInput');
-const SetWorkingQueue = require('../src/node/SetWorkingQueue');
-const TransferToQueue = require('../src/node/TransferToQueue');
-const GetCustomerInput = require('../src/node/GetCustomerInput');
+const PlayPrompt = require('../src/node/interact/PlayPrompt');
+const Disconnect = require('../src/node/terminate/Disconnect');
+const SetAttributes = require('../src/node/set/SetAttributes');
+const InvokeExternalResource = require('../src/node/integrate/InvokeExternalResource');
+const CheckExternalAttribute = require('../src/node/branch/CheckExternalAttribute');
+const { StoreUserInputCustom, StoreUserInputPhone } = require('../src/node/interact/StoreUserInput');
+const SetWorkingQueue = require('../src/node/set/SetWorkingQueue');
+const TransferToQueue = require('../src/node/terminate/TransferToQueue');
+const GetCustomerInput = require('../src/node/interact/GetCustomerInput');
 
 /**
  * @param {string} functionArn - The ARN of the CPU Lambda which runs the IVR programs.
