@@ -1,4 +1,4 @@
-const dv = require('../../DynamicValue');
+const dynamicValue = require('../../dynamicValue');
 const PlayPrompt = require('../PlayPrompt');
 
 const UUID_REGEXP = /^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/;
@@ -26,7 +26,7 @@ describe('PlayPrompt', () => {
 
     it('plays a dynamic audio prompt', () => {
       const result = new PlayPrompt({
-        audioPromptARN: dv.System.QueueARN,
+        audioPromptARN: dynamicValue.System.QueueARN,
       }).build();
 
       expect(result.metadata.useDynamic).toBe(true);
@@ -78,7 +78,7 @@ describe('PlayPrompt', () => {
 
     it('builds a dynamic text prompt', () => {
       const result = new PlayPrompt({
-        text: dv.External('$.Attributes.foo'),
+        text: dynamicValue.External('$.Attributes.foo'),
       }).build();
 
       expect(result.metadata.useDynamic).toBe(true);

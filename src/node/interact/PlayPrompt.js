@@ -1,4 +1,5 @@
 const AbstractNode = require('../AbstractNode');
+const { isDynamicValue } = require('../dynamicValue');
 
 /**
  * @typedef PlayPromptOptions
@@ -9,6 +10,9 @@ const AbstractNode = require('../AbstractNode');
  * @property {AbstractNode} [successBranch]
  */
 
+const normalizeTextToSpeechType =
+    type => (type || '').toLowerCase().trim() === 'ssml' ? 'ssml' : 'text';
+
 module.exports = class PlayPrompt extends AbstractNode {
   /**
    * @param {PlayPromptOptions} [options]
@@ -17,40 +21,37 @@ module.exports = class PlayPrompt extends AbstractNode {
     super('PlayPrompt');
     this.setSuccessBranch(options.successBranch || null);
     if (options.text) {
-      this.setTextToSpeechType(this.__normalizeTextToSpeechType(options.textToSpeechType));
+      this.setTextToSpeechType(normalizeTextToSpeechType(options.textToSpeechType));
       this.setText(options.text);
     } else if (options.audioPromptARN) {
       this.setAudioPrompt(options.audioPromptARN, options.audioPromptName);
     }
   }
 
-  __normalizeTextToSpeechType(type) {
-    return (type || '').toLowerCase().trim() === 'ssml' ? 'ssml' : 'text';
-  }
-
   setText(text) {
-    this.metadata.useDynamic = typeof text !== 'string';
+    this.metadata.useDynamic = isDynamicValue(text);
     return this.setParameter('Text', text);
   }
 
-  setTextToSpeechType = textToSpeechType => this.setParameter('TextToSpeechType', textToSpeechType);
+  setTextToSpeechType = textToSpeechType =>
+    this.setParameter('TextToSpeechType', textToSpeechType);
 
   setAudioPrompt = (value, resourceName = null) => {
     let audioPrompt;
-    if (typeof value === 'string') {
+    if (isDynamicValue(value)) {
+      this.metadata.useDynamic = true;
+      audioPrompt = { ...value, resourceName };
+    } else {
       this.metadata.useDynamic = false;
       this.metadata.promptName = resourceName;
       audioPrompt = { value, resourceName };
-    } else {
-      this.metadata.useDynamic = true;
-      audioPrompt = { ...value, resourceName };
     }
     return this.setParameter('AudioPrompt', audioPrompt);
   };
 
   /**
    * @param {AbstractNode} node
-   * @returns {PlayPromptNode}
+   * @returns {PlayPrompt}
    */
   setSuccessBranch = node => this.setBranch('Success', node);
 };

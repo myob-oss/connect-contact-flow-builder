@@ -61,7 +61,7 @@ module.exports = class AbstractNode {
   /**
    * @param {BranchCondition|string} condition
    * @param {AbstractNode} node
-   * @returns {AbstractNode}
+   * @returns {this}
    */
   setBranch(condition, node) {
     condition = this.__normalizeBranchCondition(condition);
@@ -76,7 +76,7 @@ module.exports = class AbstractNode {
   /**
    * @param {BranchCondition|string} condition
    * @param {AbstractNode} node
-   * @returns {AbstractNode}
+   * @returns {this}
    */
   addBranch(condition, node) {
     condition = this.__normalizeBranchCondition(condition);
@@ -99,7 +99,7 @@ module.exports = class AbstractNode {
   /**
    * @param {string} name
    * @param {ContactFlowParameter|string|number|boolean} value
-   * @returns {AbstractNode}
+   * @returns {this}
    */
   setParameter(name, value) {
     value = this.__normalizeParameterValue(value);
@@ -114,7 +114,7 @@ module.exports = class AbstractNode {
   /**
    * @param {string} name
    * @param {ContactFlowParameter|string|number|boolean} value
-   * @returns {AbstractNode}
+   * @returns {this}
    */
   addParameter(name, value) {
     value = this.__normalizeParameterValue(value);
@@ -131,24 +131,4 @@ module.exports = class AbstractNode {
       branches: this.branches.map(({ condition, node }) => ({ ...condition, transition: node && node.id })),
     };
   }
-};
-
-const namespaceAllowedValues = {
-  System: new Set([
-    'Customer Number',
-    'Dialed Number',
-    'Customer callback number',
-    'Stored customer input',
-    'Queue.Name',
-    'Queue.ARN',
-    'Queue.OutboundCallerId.Address',
-    'TextToSpeechVoiceId',
-    'ContactId',
-    'InitialContactId',
-    'PreviousContactId',
-    'Channel',
-    'InstanceARN',
-    'InitiationMethod',
-    'Lex.IntentName',
-  ])
 };
