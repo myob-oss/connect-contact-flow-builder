@@ -57,3 +57,4 @@ function buildContactFlow(flowName, startNode) {
 module.exports = buildContactFlow;
 
 module.exports.PlayPrompt = require('./node/interact/PlayPrompt');
+module.exports.DisconnectHangUp = require('./node/terminate/DisconnectHangUp');

@@ -1,11 +1,6 @@
 const dynamicValue = require('../../dynamicValue');
+const { UUID_REGEXP, getParameter } = require('../../testutil');
 const PlayPrompt = require('../PlayPrompt');
-
-const UUID_REGEXP = /^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/;
-
-function getParameter(node, name) {
-  return node.parameters.find(p => p.name === name);
-}
 
 describe('PlayPrompt', () => {
   describe('audio', () => {

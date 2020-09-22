@@ -18,23 +18,24 @@ First, define a Contact Flow:
 
 **simpleGreeting.js**
 ```javascript
-const { PlayPrompt, Disconnect } = require('connect-contact-flow-builder');
+const { PlayPrompt, DisconnectHangUp } = require('connect-contact-flow-builder');
 
 module.exports = (companyName) => {
-  const mainNode = new PlayPrompt({ 
+  const mainNode = new PlayPrompt({
     text: `Welcome to ${companyName}!`,
   });
-  const disconnect = new Disconnect();
+  const disconnect = new DisconnectHangUp();
   mainNode.setSuccessBranch(disconnect);
 
-  return mainNode
+  return mainNode;
 };
+
 ```
 
 Then, run `build-contact-flow` to generate a configuration JSON:
 
 ```shell script
-build-contact-flow simpleGreeting.js "My Company" > simpleGreeting.json
+build-contact-flow "My simple flow" simpleGreeting.js  "My Company" > simpleGreeting.json
 ```
 
 Finally, import the generated JSON into Connect:
@@ -97,7 +98,7 @@ See [API.md](API.md).
 
 | Class | Implemented? | Original name | Description |
 |---|---|---|---|
-| `DisconnectHangUp` | ❌ | Disconnect / hang up | Disconnects the interaction. |
+| `DisconnectHangUp` | ✔ | Disconnect / hang up | Disconnects the interaction. |
 | `TransferToQueue` | ❌ | Transfer to queue | Ends the current contact flow and places the customer in queue. |
 | `TransferToPhoneNumber` | ❌ | Transfer to phone number | Transfers the customer to a phone number. |
 | `TransferToFlow` | ❌ | Transfer to flow | Ends the current flow and transfers the customer to a flow of type contact flow. |
