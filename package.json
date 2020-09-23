@@ -12,6 +12,7 @@
   },
   "scripts": {
     "test": "jest",
+    "test:coverage": "jest --coverage",
     "lint": "eslint src"
   },
   "keywords": [
