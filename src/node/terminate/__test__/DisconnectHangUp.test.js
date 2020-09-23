@@ -1,4 +1,4 @@
-const { UUID_REGEXP, getParameter } = require('../../testutil');
+const { UUID_REGEXP } = require('../../testutil');
 const DisconnectHangUp = require('../DisconnectHangUp');
 
 describe('DisconnectHangUp', () => {

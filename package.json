@@ -11,7 +11,8 @@
     "build-contact-flow": "./src/buildContactFlowCli.js"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint src"
   },
   "keywords": [
     "Amazon",
@@ -20,6 +21,10 @@
   "author": "Cody Jenkins <cjenkins@dius.com.au>",
   "license": "MIT",
   "devDependencies": {
+    "eslint": "^7.9.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jest": "^24.0.2",
     "jest": "^26.4.2"
   },
   "dependencies": {

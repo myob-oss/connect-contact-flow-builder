@@ -8,7 +8,7 @@
  * @param {*} value
  * @returns {boolean}
  */
-module.exports.isDynamicValue = value => !!value
+module.exports.isDynamicValue = (value) => !!value
   && value.value !== undefined
   && value.namespace !== undefined;
 
@@ -145,25 +145,25 @@ module.exports.QueueMetrics = {
  * @param {string} value
  * @returns {DynamicValue}
  */
-module.exports.UserDefined = value => ({ namespace: 'User Defined', value });
+module.exports.UserDefined = (value) => ({ namespace: 'User Defined', value });
 
 /**
  * @param {string} value
  * @returns {DynamicValue}
  */
-module.exports.External = value => ({ namespace: 'External', value });
+module.exports.External = (value) => ({ namespace: 'External', value });
 
 /**
  * @param {string} value
  * @returns {DynamicValue}
  */
-module.exports.LexSlots = value => ({ namespace: 'Lex.Slots', value });
+module.exports.LexSlots = (value) => ({ namespace: 'Lex.Slots', value });
 
 /**
  * @param {string} value
  * @returns {DynamicValue}
  */
-module.exports.LexSessionAttributes = value => ({ namespace: 'Lex.SessionAttributes', value });
+module.exports.LexSessionAttributes = (value) => ({ namespace: 'Lex.SessionAttributes', value });
 
 module.exports.MediaStreams = {
   /**

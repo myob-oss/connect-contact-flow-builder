@@ -10,8 +10,7 @@ const { isDynamicValue } = require('../dynamicValue');
  * @property {AbstractNode} [successBranch]
  */
 
-const normalizeTextToSpeechType =
-    type => (type || '').toLowerCase().trim() === 'ssml' ? 'ssml' : 'text';
+const normalizeTextToSpeechType = (type) => ((type || '').toLowerCase().trim() === 'ssml' ? 'ssml' : 'text');
 
 module.exports = class PlayPrompt extends AbstractNode {
   /**
@@ -33,10 +32,11 @@ module.exports = class PlayPrompt extends AbstractNode {
     return this.setParameter('Text', text);
   }
 
-  setTextToSpeechType = textToSpeechType =>
-    this.setParameter('TextToSpeechType', textToSpeechType);
+  setTextToSpeechType(textToSpeechType) {
+    return this.setParameter('TextToSpeechType', textToSpeechType);
+  }
 
-  setAudioPrompt = (value, resourceName = null) => {
+  setAudioPrompt(value, resourceName = null) {
     let audioPrompt;
     if (isDynamicValue(value)) {
       this.metadata.useDynamic = true;
@@ -47,11 +47,13 @@ module.exports = class PlayPrompt extends AbstractNode {
       audioPrompt = { value, resourceName };
     }
     return this.setParameter('AudioPrompt', audioPrompt);
-  };
+  }
 
   /**
    * @param {AbstractNode} node
    * @returns {PlayPrompt}
    */
-  setSuccessBranch = node => this.setBranch('Success', node);
+  setSuccessBranch(node) {
+    return this.setBranch('Success', node);
+  }
 };

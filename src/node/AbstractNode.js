@@ -23,12 +23,37 @@ const { v4: uuid } = require('uuid');
  */
 
 /**
+ * @param {BranchCondition|string} condition
+ * @returns {BranchCondition}
+ * @private
+ */
+function normalizeBranchCondition(condition) {
+  if (typeof condition === 'string') {
+    return { condition };
+  }
+  return condition;
+}
+
+/**
+ * @param {string|ContactFlowParameter} value
+ * @returns {ContactFlowParameter}
+ * @private
+ */
+function normalizeParameterValue(value) {
+  if (typeof value === 'object') {
+    return value;
+  }
+  return { value };
+}
+
+/**
  * @class AbstractNode
  * @property {string} id
  * @property {string} type
  * @property {ContactFlowBranch[]} branches
  * @property {ContactFlowParameter[]} parameters
  * @property {*} metadata
+ * @property {Function} build
  */
 module.exports = class AbstractNode {
   constructor(type) {
@@ -48,29 +73,21 @@ module.exports = class AbstractNode {
 
   /**
    * @param {BranchCondition|string} condition
-   * @returns {BranchCondition}
-   * @private
-   */
-  __normalizeBranchCondition(condition) {
-    if (typeof condition === 'string') {
-      return { condition };
-    }
-    return condition;
-  }
-
-  /**
-   * @param {BranchCondition|string} condition
    * @param {AbstractNode} node
    * @returns {this}
    */
   setBranch(condition, node) {
-    condition = this.__normalizeBranchCondition(condition);
-    const existingIndex = this.branches.findIndex(branch => branch.condition.condition === condition.condition);
+    const normalizedCondition = normalizeBranchCondition(condition);
+    const existingIndex = this.branches.findIndex((branch) => {
+      const branchCondition = branch.condition.condition;
+      const testCondition = normalizedCondition.condition;
+      return branchCondition === testCondition;
+    });
     if (existingIndex >= 0) {
-      this.branches[existingIndex] = { condition, node };
+      this.branches[existingIndex] = { condition: normalizedCondition, node };
       return this;
     }
-    return this.addBranch(condition, node);
+    return this.addBranch(normalizedCondition, node);
   }
 
   /**
@@ -79,21 +96,9 @@ module.exports = class AbstractNode {
    * @returns {this}
    */
   addBranch(condition, node) {
-    condition = this.__normalizeBranchCondition(condition);
-    this.branches.push({ condition, node });
+    const normalizedCondition = normalizeBranchCondition(condition);
+    this.branches.push({ condition: normalizedCondition, node });
     return this;
-  }
-
-  /**
-   * @param {string|ContactFlowParameter} value
-   * @returns {ContactFlowParameter}
-   * @private
-   */
-  __normalizeParameterValue(value) {
-    if (typeof value === 'object') {
-      return value;
-    }
-    return { value };
   }
 
   /**
@@ -102,13 +107,13 @@ module.exports = class AbstractNode {
    * @returns {this}
    */
   setParameter(name, value) {
-    value = this.__normalizeParameterValue(value);
-    const existingIndex = this.parameters.findIndex(parameter => parameter.name === name);
+    const normalizedValue = normalizeParameterValue(value);
+    const existingIndex = this.parameters.findIndex((parameter) => parameter.name === name);
     if (existingIndex >= 0) {
-      this.parameters[existingIndex] = { name, ...value };
+      this.parameters[existingIndex] = { name, ...normalizedValue };
       return this;
     }
-    return this.addParameter(name, value);
+    return this.addParameter(name, normalizedValue);
   }
 
   /**
@@ -117,8 +122,8 @@ module.exports = class AbstractNode {
    * @returns {this}
    */
   addParameter(name, value) {
-    value = this.__normalizeParameterValue(value);
-    this.parameters.push({ name, ...value });
+    const normalizedValue = normalizeParameterValue(value);
+    this.parameters.push({ name, ...normalizedValue });
     return this;
   }
 
@@ -128,7 +133,10 @@ module.exports = class AbstractNode {
   build() {
     return {
       ...this,
-      branches: this.branches.map(({ condition, node }) => ({ ...condition, transition: node && node.id })),
+      branches: this.branches.map(({ condition, node }) => ({
+        ...condition,
+        transition: node && node.id,
+      })),
     };
   }
 };
