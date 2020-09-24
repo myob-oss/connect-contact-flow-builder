@@ -92,7 +92,7 @@ See [API.md](API.md).
 
 | Class | Implemented? | Original name | Description |
 |---|---|---|---|
-| `InvokeAWSLambdaFunction` | ❌ | Invoke AWS Lambda function | Makes a call to AWS Lambda and optionally returns key/value pairs, which can be used to set contact attributes. |
+| `InvokeAWSLambdaFunction` | ✔ | Invoke AWS Lambda function | Makes a call to AWS Lambda and optionally returns key/value pairs, which can be used to set contact attributes. |
 
 ## Terminate / Transfer
 

@@ -1,50 +1,47 @@
+const { isDynamicValue } = require('../dynamicValue');
 const ContactFlowNode = require('../AbstractNode');
 
 /**
- * @typedef SetAttributesTextAttribute
+ * @typedef SetContactAttributesAttribute
  * @property {string} destinationKey
- * @property {string} value
+ * @property {string|DynamicValue} value
  */
 
 /**
- * @typedef SetAttributesDynamicAttribute
- * @property {string} destinationKey
- * @property {DynamicValue} value
+ * @typedef SetContactAttributesOptions
+ * @property {AbstractNode} [successBranch]
+ * @property {AbstractNode} [errorBranch]
+ * @property {SetContactAttributesAttribute[]} [attributes]
  */
 
-/**
- * @typedef SetAttributesOptions
- * @property {ContactFlowNode} [successBranch]
- * @property {ContactFlowNode} [errorBranch]
- * @property {SetAttributesTextAttribute[]} [textAttributes]
- * @property {SetAttributesDynamicAttribute[]} [dynamicAttributes]
- */
-
-module.exports = class SetAttributes extends ContactFlowNode {
+module.exports = class SetContactAttributes extends ContactFlowNode {
   /**
-   * @param {SetAttributesOptions} [options]
+   * @param {SetContactAttributesOptions} [options]
    */
   constructor(options = {}) {
     super('SetAttributes');
     this.setSuccessBranch(options.successBranch || null);
     this.setErrorBranch(options.errorBranch || null);
-    if (Array.isArray(options.textAttributes)) {
-      options.textAttributes.forEach((attribute) => this.addTextAttribute(
-        attribute.destinationKey,
-        attribute.value,
-      ));
-    }
-    if (Array.isArray(options.dynamicAttributes)) {
-      options.dynamicAttributes.forEach((attribute) => this.addDynamicAttribute(
-        attribute.destinationKey,
-        attribute.value,
-      ));
+    if (Array.isArray(options.attributes)) {
+      options.attributes.forEach((attribute) => {
+        if (isDynamicValue(attribute.value)) {
+          this.addDynamicAttribute(
+            attribute.destinationKey,
+            attribute.value,
+          );
+        } else {
+          this.addTextAttribute(
+            attribute.destinationKey,
+            attribute.value,
+          );
+        }
+      });
     }
   }
 
   /**
    * @param {AbstractNode} node
-   * @returns {SetAttributes}
+   * @returns {SetContactAttributes}
    */
   setSuccessBranch(node) {
     return this.setBranch('Success', node);
@@ -52,7 +49,7 @@ module.exports = class SetAttributes extends ContactFlowNode {
 
   /**
    * @param {AbstractNode} node
-   * @returns {SetAttributes}
+   * @returns {SetContactAttributes}
    */
   setErrorBranch(node) {
     return this.setBranch('Error', node);
@@ -61,7 +58,7 @@ module.exports = class SetAttributes extends ContactFlowNode {
   /**
    * @param {string} destinationKey
    * @param {string} value
-   * @returns {SetAttributes}
+   * @returns {SetContactAttributes}
    */
   addTextAttribute(destinationKey, value) {
     return this.addParameter('Attribute', { key: destinationKey, value });
@@ -70,7 +67,7 @@ module.exports = class SetAttributes extends ContactFlowNode {
   /**
    * @param {string} destinationKey
    * @param {DynamicValue} value
-   * @returns {SetAttributes}
+   * @returns {SetContactAttributes}
    */
   addDynamicAttribute(destinationKey, value) {
     return this.addParameter('Attribute', { key: destinationKey, ...value });

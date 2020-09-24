@@ -88,3 +88,5 @@ function buildContactFlow(flowName, startNode) {
 module.exports = buildContactFlow;
 module.exports.PlayPrompt = require('./node/interact/PlayPrompt');
 module.exports.DisconnectHangUp = require('./node/terminate/DisconnectHangUp');
+module.exports.SetContactAttributes = require('./node/set/SetContactAttributes');
+module.exports.InvokeAWSLambdaFunction = require('./node/integrate/InvokeAWSLambdaFunction');

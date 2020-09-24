@@ -3,9 +3,28 @@ const dynamicValue = require('../../dynamicValue');
 const SetContactAttributes = require('../SetContactAttributes');
 
 describe('SetContactAttributes', () => {
+  it('sets the success and error branches', () => {
+    const mockSuccessTarget = { id: 'success-id' };
+    const mockErrorTarget = { id: 'error-id' };
+    const result = new SetContactAttributes({
+      successBranch: mockSuccessTarget,
+      errorBranch: mockErrorTarget,
+    }).build();
+
+    expect(result.type).toEqual('SetAttributes');
+    expect(getBranch(result, 'Success')).toEqual({
+      condition: 'Success',
+      transition: 'success-id',
+    });
+    expect(getBranch(result, 'Error')).toEqual({
+      condition: 'Error',
+      transition: 'error-id',
+    });
+  });
+
   it('sets static attributes', () => {
     const result = new SetContactAttributes({
-      textAttributes: [
+      attributes: [
         { destinationKey: 'AlphaKey', value: 'alpha value' },
         { destinationKey: 'BravoKey', value: 'bravo value' },
       ],
@@ -28,7 +47,7 @@ describe('SetContactAttributes', () => {
 
   it('sets dynamic attributes', () => {
     const result = new SetContactAttributes({
-      dynamicAttributes: [
+      attributes: [
         {
           destinationKey: 'ExternalKey',
           value: dynamicValue.External('$.Attributes.AlphaKey'),
@@ -54,24 +73,6 @@ describe('SetContactAttributes', () => {
       key: 'QueueARN',
       value: 'Queue.ARN',
       namespace: 'System',
-    });
-  });
-
-  it('sets the success and error branchs', () => {
-    const mockSuccessTarget = { id: 'success-id' };
-    const mockErrorTarget = { id: 'error-id' };
-    const result = new SetContactAttributes({
-      successBranch: mockSuccessTarget,
-      errorBranch: mockErrorTarget,
-    }).build();
-
-    expect(getBranch(result, 'Success')).toEqual({
-      condition: 'Success',
-      transition: 'success-id',
-    });
-    expect(getBranch(result, 'Error')).toEqual({
-      condition: 'Error',
-      transition: 'error-id',
     });
   });
 });
