@@ -64,7 +64,7 @@ See [API.md](API.md).
 | Class | Implemented? | Original name | Description |
 |---|---|---|---|
 | `SetWorkingQueue` | ❌ | Set working queue | Specify the queue that the contact will be transferred to. |
-| `SetContactAttributes` | ❌ | Set contact attributes | Define and store key-value pairs as contact attributes. |
+| `SetContactAttributes` | ✔ | Set contact attributes | Define and store key-value pairs as contact attributes. |
 | `ChangeRoutingPriorityAge` | ❌ | Change routing priority / age | Alters the priority of the contact in queue. |
 | `SetLoggingBehavior` | ❌ | Set logging behavior | Enables or disables Contact Flow Logs. |
 | `SetRecordingAndAnalyticsBehavior` | ❌ | Set recording and analytics behavior | Specify call recording behavior and set up speech analytics. You must set up recording to use speech analytics.  |
