@@ -83,7 +83,7 @@ See [API.md](API.md).
 | `CheckQueueStatus` | ❌ | Check queue status | Check the amount of time the oldest contact has been in queue, or the queue capacity, and branch accordingly.  If no match is found, the contact is routed down the No Match branch. |
 | `CheckStaffing` | ❌ | Check staffing | Branches based on whether agents are available, staffed (for example, available, on call, or after call work), or online. |
 | `CheckHoursOfOperation` | ❌ | Check hours of operation | Checks the hours of operation, then branches based on whether it is in hours or out of hours. |
-| `CheckContactAttributes` | ❌ | Check contact attributes | Branches based on a comparison to the value of a contact attribute. |
+| `CheckContactAttributes` | ✔ | Check contact attributes | Branches based on a comparison to the value of a contact attribute. |
 | `DistributeByPercentage` | ❌ | Distribute by percentage | Routes customers randomly based on specified percentage. |
 | `Loop` | ❌ | Loop | Repeats the looping branch for the specified number of times. After which, the complete branch is followed. |
 | `Wait` | ❌ | Wait | Waits for a specified period of time, and optionally for specified events. This block is supported for chat only. |
