@@ -1,0 +1,7 @@
+steps:
+  - label: 'Lint, test and build'
+    branches: '!main'
+    commands:
+      - cicd/ci.sh
+    agents:
+      queue: cti-lab
