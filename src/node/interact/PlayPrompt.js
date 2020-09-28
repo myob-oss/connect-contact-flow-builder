@@ -3,10 +3,10 @@ const { isDynamicValue } = require('../dynamicValue');
 
 /**
  * @typedef PlayPromptOptions
- * @property {string|DynamicValue} [text]
- * @property {string} [textToSpeechType] - Defaults to {'text'}.
- * @property {string|DynamicValue} [audioPromptARN].
- * @property {string} [audioPromptName].
+ * @property {string|DynamicValue} [promptText]
+ * @property {string} [promptTextToSpeechType] - Defaults to {'text'}.
+ * @property {string|DynamicValue} [promptAudioARN].
+ * @property {string} [promptAudioName].
  * @property {AbstractNode} [successBranch]
  */
 
@@ -18,40 +18,54 @@ module.exports = class PlayPrompt extends AbstractNode {
    */
   constructor(options = {}) {
     super('PlayPrompt');
+    this.metadata.useDynamic = false;
     this.setSuccessBranch(options.successBranch || null);
-    if (options.text) {
-      this.setTextToSpeechType(normalizeTextToSpeechType(options.textToSpeechType));
-      this.setText(options.text);
-    } else if (options.audioPromptARN) {
-      this.setAudioPrompt(options.audioPromptARN, options.audioPromptName);
+    if (options.promptText) {
+      this.setPromptTextToSpeechType(normalizeTextToSpeechType(options.promptTextToSpeechType));
+      this.setPromptText(options.promptText);
+    } else if (options.promptAudioARN) {
+      this.setPromptAudio(options.promptAudioARN, options.promptAudioName);
     }
   }
 
-  setText(text) {
+  /**
+   * @param {string|DynamicValue} text
+   * @returns {this}
+   */
+  setPromptText(text) {
     this.metadata.useDynamic = isDynamicValue(text);
     return this.setParameter('Text', text);
   }
 
-  setTextToSpeechType(textToSpeechType) {
+  /**
+   * @param {string} textToSpeechType
+   * @returns {this}
+   */
+  setPromptTextToSpeechType(textToSpeechType) {
     return this.setParameter('TextToSpeechType', textToSpeechType);
   }
 
-  setAudioPrompt(value, resourceName = null) {
-    let audioPrompt;
-    if (isDynamicValue(value)) {
+  /**
+   * @param {string|DynamicValue} audioArn
+   * @param {string} resourceName
+   * @returns {this}
+   */
+  setPromptAudio(audioArn, resourceName = null) {
+    let promptAudio;
+    if (isDynamicValue(audioArn)) {
       this.metadata.useDynamic = true;
-      audioPrompt = { ...value, resourceName };
+      promptAudio = { ...audioArn, resourceName };
     } else {
       this.metadata.useDynamic = false;
       this.metadata.promptName = resourceName;
-      audioPrompt = { value, resourceName };
+      promptAudio = { value: audioArn, resourceName };
     }
-    return this.setParameter('AudioPrompt', audioPrompt);
+    return this.setParameter('AudioPrompt', promptAudio);
   }
 
   /**
    * @param {AbstractNode} node
-   * @returns {PlayPrompt}
+   * @returns {this}
    */
   setSuccessBranch(node) {
     return this.setBranch('Success', node);

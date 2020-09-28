@@ -1,13 +1,13 @@
 const dynamicValue = require('../../dynamicValue');
-const { UUID_REGEXP, getParameter } = require('../../testutil');
+const { UUID_REGEXP, getParameter, getBranch } = require('../../testutil');
 const PlayPrompt = require('../PlayPrompt');
 
 describe('PlayPrompt', () => {
   describe('audio', () => {
     it('plays a static audio prompt', () => {
       const result = new PlayPrompt({
-        audioPromptARN: 'arn:aws:connect',
-        audioPromptName: 'Beep.wav',
+        promptAudioARN: 'arn:aws:connect',
+        promptAudioName: 'Beep.wav',
       }).build();
 
       expect(result.metadata.useDynamic).toBe(false);
@@ -21,7 +21,7 @@ describe('PlayPrompt', () => {
 
     it('plays a dynamic audio prompt', () => {
       const result = new PlayPrompt({
-        audioPromptARN: dynamicValue.System.QueueARN,
+        promptAudioARN: dynamicValue.System.QueueARN,
       }).build();
 
       expect(result.metadata.useDynamic).toBe(true);
@@ -38,7 +38,7 @@ describe('PlayPrompt', () => {
   describe('text-to-speech', () => {
     it('builds a static text prompt', () => {
       const result = new PlayPrompt({
-        text: 'Simple text',
+        promptText: 'Simple text',
       }).build();
 
       expect(result.id).toMatch(UUID_REGEXP);
@@ -56,8 +56,8 @@ describe('PlayPrompt', () => {
 
     it('builds a static SSML prompt', () => {
       const result = new PlayPrompt({
-        text: '<speak>SSML text</speak>',
-        textToSpeechType: 'ssml',
+        promptText: '<speak>SSML text</speak>',
+        promptTextToSpeechType: 'ssml',
       }).build();
 
       expect(result.metadata.useDynamic).toBe(false);
@@ -73,7 +73,7 @@ describe('PlayPrompt', () => {
 
     it('builds a dynamic text prompt', () => {
       const result = new PlayPrompt({
-        text: dynamicValue.External('$.Attributes.foo'),
+        promptText: dynamicValue.External('$.Attributes.foo'),
       }).build();
 
       expect(result.metadata.useDynamic).toBe(true);
@@ -91,22 +91,22 @@ describe('PlayPrompt', () => {
 
   describe('branching', () => {
     it('sets a success branch', () => {
-      const blue = new PlayPrompt({ text: 'This is where we start' });
+      const blue = new PlayPrompt({ promptText: 'This is where we start' });
       const green = new PlayPrompt({
-        text: 'This is where we end',
+        promptText: 'This is where we end',
         successBranch: blue,
       });
       blue.setSuccessBranch(green);
 
-      expect(blue.build().branches).toEqual([{
+      expect(getBranch(blue.build(), 'Success')).toEqual({
         condition: 'Success',
         transition: green.id,
-      }]);
+      });
 
-      expect(green.build().branches).toEqual([{
+      expect(getBranch(green.build(), 'Success')).toEqual({
         condition: 'Success',
         transition: blue.id,
-      }]);
+      });
     });
   });
 });

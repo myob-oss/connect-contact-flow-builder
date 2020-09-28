@@ -54,7 +54,7 @@ See [API.md](API.md).
 |---|---|---|---|
 | `PlayPrompt` | ✔️ | Play prompt | Delivers an audio or chat message. |
 | `GetCustomerInput` | ❌ | Get customer input | Branches based on customer intent. |
-| `StoreCustomerInput` | ❌ | Store customer input | Stores numerical input to contact attribute. |
+| `StoreCustomerInput` | 🟡 | Store customer input | Stores numerical input to contact attribute. |
 | `HoldCustomerOrAgent` | ❌ | Hold customer or agent | Places a customer or agent on or off hold. |
 | `StartMediaStreaming` | ❌ | Start media streaming | Starts streaming media to Kinesis. |
 | `StopMediaStreaming` | ❌ | Stop media streaming | Stops streaming media to Kinesis. |

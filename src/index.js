@@ -85,8 +85,15 @@ function buildContactFlow(flowName, startNode) {
   }
 }
 
+/* eslint-disable global-require */
+
 module.exports = buildContactFlow;
 module.exports.PlayPrompt = require('./node/interact/PlayPrompt');
+
+module.exports.StoreCustomerInput = {
+  Phone: require('./node/interact/StoreCustomerInputPhone'),
+};
 module.exports.DisconnectHangUp = require('./node/terminate/DisconnectHangUp');
 module.exports.SetContactAttributes = require('./node/set/SetContactAttributes');
 module.exports.InvokeAWSLambdaFunction = require('./node/integrate/InvokeAWSLambdaFunction');
+module.exports.CheckContactAttributes = require('./node/branch/CheckContactAttributes');
