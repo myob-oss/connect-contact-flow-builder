@@ -5,8 +5,8 @@ describe('TransferToWorkingQueue', () => {
   it('builds the basics', () => {
     const result = new TransferToWorkingQueue().build();
     expect(result.type).toEqual('Transfer');
-    expect(result.metadata.useDynamic).toEqual(false);
     expect(result.target).toEqual('Queue');
+    expect(result.metadata.useDynamic).toEqual(false);
   });
 
   it('sets the "At Capacity" branch', () => {

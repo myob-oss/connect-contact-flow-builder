@@ -88,6 +88,8 @@ function buildContactFlow(flowName, startNode) {
 /* eslint-disable global-require */
 
 module.exports = buildContactFlow;
+module.exports.CountryDialCode = require('./node/CountryDialCode');
+module.exports.dynamicValue = require('./node/dynamicValue');
 
 // Interact
 module.exports.PlayPrompt = require('./node/interact/PlayPrompt');
@@ -114,3 +116,4 @@ module.exports.TransferToQueue = {
   WorkingQueue: require('./node/terminate/TransferToWorkingQueue'),
   CallbackQueue: require('./node/terminate/TransferToCallbackQueue'),
 };
+module.exports.TransferToPhoneNumber = require('./node/terminate/TransferToPhoneNumber');

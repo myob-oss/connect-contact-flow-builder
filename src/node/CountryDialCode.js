@@ -1,5 +1,11 @@
 /**
- * @enum CountryDialCode
+ * @typedef CountryDialCodeConfig
+ * @property {string} dialCode
+ * @property {string} countryAcronym
+ */
+
+/**
+ * @enum {CountryDialCodeConfig} CountryDialCode
  */
 const CountryDialCode = {
   AF: { dialCode: '+93', countryAcronym: 'AF' }, // Afghanistan

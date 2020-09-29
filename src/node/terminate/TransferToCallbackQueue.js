@@ -1,3 +1,4 @@
+const { numberWithFallback } = require('../parseUtil');
 const AbstractSetWorkingQueue = require('../AbstractSetWorkingQueue');
 
 /**
@@ -11,13 +12,6 @@ const AbstractSetWorkingQueue = require('../AbstractSetWorkingQueue');
  * @property {AbstractNode} [successBranch]
  * @property {AbstractNode} [errorBranch]
  */
-
-/**
- * @param {number|undefined} number
- * @param {number} fallback
- * @returns {number}
- */
-const numberWithFallback = (number, fallback) => (Number.isInteger(number) ? number : fallback);
 
 module.exports = class TransferToCallbackQueue extends AbstractSetWorkingQueue {
   /**

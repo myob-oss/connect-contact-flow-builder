@@ -41,7 +41,7 @@ module.exports = class CheckContactAttributes extends ContactFlowNode {
 
   /**
    * @param {DynamicValue} checkValue
-   * @returns {CheckContactAttributes}
+   * @returns {this}
    */
   setCheckValue(checkValue) {
     if (!isDynamicValue(checkValue)) {
@@ -55,7 +55,7 @@ module.exports = class CheckContactAttributes extends ContactFlowNode {
 
   /**
    * @param {AbstractNode} node
-   * @returns {CheckContactAttributes}
+   * @returns {this}
    */
   setNoMatchBranch(node) {
     return this.setBranch('NoMatch', node);
@@ -64,7 +64,7 @@ module.exports = class CheckContactAttributes extends ContactFlowNode {
   /**
    * @param {string|number} value
    * @param {AbstractNode} node
-   * @returns {CheckContactAttributes}
+   * @returns {this}
    */
   addEqualsBranch(value, node) {
     return addEvaluateBranch(this, {
@@ -77,7 +77,7 @@ module.exports = class CheckContactAttributes extends ContactFlowNode {
   /**
    * @param {string|number} value
    * @param {AbstractNode} node
-   * @returns {CheckContactAttributes}
+   * @returns {this}
    */
   addLessThanBranch(value, node) {
     return addEvaluateBranch(this, {
@@ -90,7 +90,7 @@ module.exports = class CheckContactAttributes extends ContactFlowNode {
   /**
    * @param {string|number} value
    * @param {AbstractNode} node
-   * @returns {CheckContactAttributes}
+   * @returns {this}
    */
   addLessThanOrEqualToBranch(value, node) {
     return addEvaluateBranch(this, {
@@ -103,7 +103,7 @@ module.exports = class CheckContactAttributes extends ContactFlowNode {
   /**
    * @param {string|number} value
    * @param {AbstractNode} node
-   * @returns {CheckContactAttributes}
+   * @returns {this}
    */
   addGreaterThanBranch(value, node) {
     return addEvaluateBranch(this, {
@@ -116,7 +116,7 @@ module.exports = class CheckContactAttributes extends ContactFlowNode {
   /**
    * @param {string|number} value
    * @param {AbstractNode} node
-   * @returns {CheckContactAttributes}
+   * @returns {this}
    */
   addGreaterThanOrEqualToBranch(value, node) {
     return addEvaluateBranch(this, {
@@ -129,7 +129,7 @@ module.exports = class CheckContactAttributes extends ContactFlowNode {
   /**
    * @param {string} value
    * @param {AbstractNode} node
-   * @returns {CheckContactAttributes}
+   * @returns {this}
    */
   addStartsWithBranch(value, node) {
     return addEvaluateBranch(this, {
@@ -142,7 +142,7 @@ module.exports = class CheckContactAttributes extends ContactFlowNode {
   /**
    * @param {string} value
    * @param {AbstractNode} node
-   * @returns {CheckContactAttributes}
+   * @returns {this}
    */
   addEndsWithBranch(value, node) {
     return addEvaluateBranch(this, {
@@ -155,7 +155,7 @@ module.exports = class CheckContactAttributes extends ContactFlowNode {
   /**
    * @param {string} value
    * @param {AbstractNode} node
-   * @returns {CheckContactAttributes}
+   * @returns {this}
    */
   addContainsBranch(value, node) {
     return addEvaluateBranch(this, {

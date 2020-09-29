@@ -2,8 +2,8 @@ const AbstractSetWorkingQueue = require('../AbstractSetWorkingQueue');
 
 /**
  * @typedef SetWorkingQueueOptions
- * @property {string} [queueArn]
- * @property {string} [agentArn]
+ * @property {string|DynamicValue} [queueArn]
+ * @property {string|DynamicValue} [agentArn]
  * @property {string} [displayName]
  * @property {AbstractNode} [successBranch]
  * @property {AbstractNode} [errorBranch]
