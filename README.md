@@ -63,7 +63,7 @@ See [API.md](API.md).
 
 | Class | Implemented? | Original name | Description |
 |---|---|---|---|
-| `SetWorkingQueue` | ❌ | Set working queue | Specify the queue that the contact will be transferred to. |
+| `SetWorkingQueue` | ✔ | Set working queue | Specify the queue that the contact will be transferred to. |
 | `SetContactAttributes` | ✔ | Set contact attributes | Define and store key-value pairs as contact attributes. |
 | `ChangeRoutingPriorityAge` | ❌ | Change routing priority / age | Alters the priority of the contact in queue. |
 | `SetLoggingBehavior` | ❌ | Set logging behavior | Enables or disables Contact Flow Logs. |

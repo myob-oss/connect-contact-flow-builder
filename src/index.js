@@ -88,13 +88,23 @@ function buildContactFlow(flowName, startNode) {
 /* eslint-disable global-require */
 
 module.exports = buildContactFlow;
+
+// Interact
 module.exports.PlayPrompt = require('./node/interact/PlayPrompt');
 
-module.exports.StoreCustomerInput = {
-  Phone: require('./node/interact/StoreCustomerInputPhone'),
-  Custom: require('./node/interact/StoreCustomerInputCustom'),
-};
-module.exports.DisconnectHangUp = require('./node/terminate/DisconnectHangUp');
+module.exports.StoreCustomerInput = {};
+module.exports.StoreCustomerInput.Phone = require('./node/interact/StoreCustomerInputPhone');
+module.exports.StoreCustomerInput.Custom = require('./node/interact/StoreCustomerInputCustom');
+
+// Set
+module.exports.SetWorkingQueue = require('./node/set/SetWorkingQueue');
 module.exports.SetContactAttributes = require('./node/set/SetContactAttributes');
-module.exports.InvokeAWSLambdaFunction = require('./node/integrate/InvokeAWSLambdaFunction');
+
+// Branch
 module.exports.CheckContactAttributes = require('./node/branch/CheckContactAttributes');
+
+// Integrate
+module.exports.InvokeAWSLambdaFunction = require('./node/integrate/InvokeAWSLambdaFunction');
+
+// Terminate / Transfer
+module.exports.DisconnectHangUp = require('./node/terminate/DisconnectHangUp');
