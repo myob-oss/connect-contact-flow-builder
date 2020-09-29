@@ -92,9 +92,10 @@ module.exports = buildContactFlow;
 // Interact
 module.exports.PlayPrompt = require('./node/interact/PlayPrompt');
 
-module.exports.StoreCustomerInput = {};
-module.exports.StoreCustomerInput.Phone = require('./node/interact/StoreCustomerInputPhone');
-module.exports.StoreCustomerInput.Custom = require('./node/interact/StoreCustomerInputCustom');
+module.exports.StoreCustomerInput = {
+  Phone: require('./node/interact/StoreCustomerInputPhone'),
+  Custom: require('./node/interact/StoreCustomerInputCustom'),
+};
 
 // Set
 module.exports.SetWorkingQueue = require('./node/set/SetWorkingQueue');

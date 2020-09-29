@@ -2,6 +2,7 @@ steps:
   - label: 'Lint and test'
     branches: '*'
     commands:
+      - cicd/ci-install-dependencies.sh
       - cicd/ci-check-quality.sh
     agents:
       queue: oss-lab
