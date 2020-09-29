@@ -1,5 +1,5 @@
 steps:
-  - label: 'Lint and test'
+  - label: 'Install dependencies & check quality'
     branches: '*'
     commands:
       - cicd/ci-install-dependencies.sh

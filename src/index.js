@@ -93,8 +93,8 @@ module.exports = buildContactFlow;
 module.exports.PlayPrompt = require('./node/interact/PlayPrompt');
 
 module.exports.StoreCustomerInput = {
-  Phone: require('./node/interact/StoreCustomerInputPhone'),
-  Custom: require('./node/interact/StoreCustomerInputCustom'),
+  PhoneInput: require('./node/interact/StoreCustomerInputPhone'),
+  CustomInput: require('./node/interact/StoreCustomerInputCustom'),
 };
 
 // Set
@@ -109,3 +109,8 @@ module.exports.InvokeAWSLambdaFunction = require('./node/integrate/InvokeAWSLamb
 
 // Terminate / Transfer
 module.exports.DisconnectHangUp = require('./node/terminate/DisconnectHangUp');
+
+module.exports.TransferToQueue = {
+  WorkingQueue: require('./node/terminate/TransferToWorkingQueue'),
+  CallbackQueue: require('./node/terminate/TransferToCallbackQueue'),
+};

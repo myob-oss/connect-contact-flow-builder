@@ -99,7 +99,7 @@ See [API.md](API.md).
 | Class | Implemented? | Original name | Description |
 |---|---|---|---|
 | `DisconnectHangUp` | ✔ | Disconnect / hang up | Disconnects the interaction. |
-| `TransferToQueue` | ❌ | Transfer to queue | Ends the current contact flow and places the customer in queue. |
+| `TransferToQueue` | ✔ | Transfer to queue | Ends the current contact flow and places the customer in queue. |
 | `TransferToPhoneNumber` | ❌ | Transfer to phone number | Transfers the customer to a phone number. |
 | `TransferToFlow` | ❌ | Transfer to flow | Ends the current flow and transfers the customer to a flow of type contact flow. |
 
