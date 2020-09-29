@@ -6,8 +6,8 @@ const AbstractNode = require('../AbstractNode');
  * @typedef TransferToPhoneNumberOptions
  * @property {CountryDialCode} [localCountryCode]
  * @property {string|DynamicValue} [phoneNumber]
- * @property {number|DynamicValue} [timeout]
- * @property {boolean} [resumeAfterDisconnect]
+ * @property {number|DynamicValue} [timeout] - Defaults to {30}
+ * @property {boolean} [resumeAfterDisconnect] - Defaults to {true}
  * @property {AbstractNode} [successBranch]
  * @property {AbstractNode} [callFailedBranch]
  * @property {AbstractNode} [timeoutBranch]

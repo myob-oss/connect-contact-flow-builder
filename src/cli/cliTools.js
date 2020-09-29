@@ -40,7 +40,7 @@ function parseArgs(processArgs) {
     }
   }
 
-  result.isValid = !!args.flowName && !!args.sourcePath;
+  result.isValid = !!result.flowName && !!result.sourcePath;
 
   return result;
 }

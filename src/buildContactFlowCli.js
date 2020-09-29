@@ -19,6 +19,9 @@ function writeErrorResult(result) {
 
 const args = parseArgs(process.argv);
 if (args.help || !args.isValid) {
+  if (!args.isValid) {
+    process.stderr.write(`Invalid arguments ${JSON.stringify(args)}\n\n`);
+  }
   process.stderr.write(`Usage: build-contact-flow [...options] flowName sourcePath [...builderArgs]
 
 Generate a contact flow named "flowName". Import the JavaScript module at 
