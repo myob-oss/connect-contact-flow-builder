@@ -7,9 +7,11 @@ describe('StoreCustomerInputPhone', () => {
     const result = new StoreCustomerInputPhone().build();
     expect(result.type).toBe('StoreUserInput');
     expect(result.metadata.useDynamic).toBe(false);
-    expect(result.metadata.useDynamicForEncryptionKeys).toBe(true);
-    expect(result.metadata.useDynamicForTerminatorDigits).toBe(false);
     expect(result.metadata.countryCodePrefix).toBe(CountryDialCode.US.dialCode);
+    expect(getParameter(result, 'CustomerInputType')).toEqual({
+      name: 'CustomerInputType',
+      value: 'PhoneNumber',
+    });
     expect(getParameter(result, 'Timeout')).toEqual({
       name: 'Timeout',
       value: '5',
@@ -48,14 +50,10 @@ describe('StoreCustomerInputPhone', () => {
   it('takes local format', () => {
     const result = new StoreCustomerInputPhone({
       localCountryCode: CountryDialCode.AU,
-      firstEntryTimeLimit: 8,
+      timeoutBeforeFirstEntry: 8,
     }).build();
 
     expect(result.metadata.countryCodePrefix).toEqual(CountryDialCode.AU.dialCode);
-    expect(getParameter(result, 'CustomerInputType')).toEqual({
-      name: 'CustomerInputType',
-      value: 'PhoneNumber',
-    });
     expect(getParameter(result, 'PhoneNumberFormat')).toEqual({
       name: 'PhoneNumberFormat',
       value: 'Local',
@@ -72,13 +70,9 @@ describe('StoreCustomerInputPhone', () => {
 
   it('takes international format', () => {
     const result = new StoreCustomerInputPhone({
-      firstEntryTimeLimit: 9,
+      timeoutBeforeFirstEntry: 9,
     }).build();
 
-    expect(getParameter(result, 'CustomerInputType')).toEqual({
-      name: 'CustomerInputType',
-      value: 'PhoneNumber',
-    });
     expect(getParameter(result, 'PhoneNumberFormat')).toEqual({
       name: 'PhoneNumberFormat',
       value: 'International',

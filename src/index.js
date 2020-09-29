@@ -92,6 +92,7 @@ module.exports.PlayPrompt = require('./node/interact/PlayPrompt');
 
 module.exports.StoreCustomerInput = {
   Phone: require('./node/interact/StoreCustomerInputPhone'),
+  Custom: require('./node/interact/StoreCustomerInputCustom'),
 };
 module.exports.DisconnectHangUp = require('./node/terminate/DisconnectHangUp');
 module.exports.SetContactAttributes = require('./node/set/SetContactAttributes');

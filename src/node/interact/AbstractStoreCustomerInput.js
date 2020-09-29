@@ -1,26 +1,22 @@
-const CountryDialCode = require('../CountryDialCode');
 const PlayPrompt = require('./PlayPrompt');
 
 /**
- * @typedef {PlayPromptOptions} StoreCustomerInputOptions
+ * @typedef {PlayPromptOptions} AbstractStoreCustomerInputOptions
  * @property {AbstractNode} [errorBranch]
- * @property {number} [firstEntryTimeLimit] - In seconds; defaults to {5}
+ * @property {number} [timeoutBeforeFirstEntry] - In seconds; defaults to {5}
  */
 
 module.exports = class AbstractStoreCustomerInput extends PlayPrompt {
   /**
-   * @param {StoreCustomerInputOptions} [options]
+   * @param {AbstractStoreCustomerInputOptions} [options]
    */
   constructor(options = {}) {
     super(options);
     this.type = 'StoreUserInput';
-    this.metadata.useDynamicForEncryptionKeys = true;
-    this.metadata.useDynamicForTerminatorDigits = false;
-    this.metadata.countryCodePrefix = CountryDialCode.US.dialCode;
     this.setErrorBranch(options.errorBranch || null);
-    this.setFirstEntryTimeLimit(
-      options.firstEntryTimeLimit || options.firstEntryTimeLimit === 0
-        ? options.firstEntryTimeLimit
+    this.setTimeoutBeforeFirstEntry(
+      options.timeoutBeforeFirstEntry || options.timeoutBeforeFirstEntry === 0
+        ? options.timeoutBeforeFirstEntry
         : 5,
     );
   }
@@ -33,7 +29,7 @@ module.exports = class AbstractStoreCustomerInput extends PlayPrompt {
     return this.setBranch('Error', node);
   }
 
-  setFirstEntryTimeLimit(timeLimit) {
+  setTimeoutBeforeFirstEntry(timeLimit) {
     return this.setParameter('Timeout', timeLimit.toString());
   }
 };

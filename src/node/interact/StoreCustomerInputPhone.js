@@ -1,7 +1,8 @@
+const CountryDialCode = require('../CountryDialCode');
 const AbstractStoreCustomerInput = require('./AbstractStoreCustomerInput');
 
 /**
- * @typedef {StoreCustomerInputOptions} StoreCustomerInputPhoneOptions
+ * @typedef {AbstractStoreCustomerInputOptions} StoreCustomerInputPhoneOptions
  * @property {CountryDialCode} [localCountryCode]
  * @property {AbstractNode} [invalidNumberBranch]
  */
@@ -12,6 +13,7 @@ module.exports = class StoreCustomerInputPhone extends AbstractStoreCustomerInpu
    */
   constructor(options = {}) {
     super(options);
+    this.metadata.countryCodePrefix = CountryDialCode.US.dialCode;
     this.setInvalidNumberBranch(options.invalidNumberBranch || null);
     this.setParameter('CustomerInputType', 'PhoneNumber');
     if (options.localCountryCode) {
