@@ -1,7 +1,7 @@
 steps:
-  - label: 'Lint, test and build'
-    branches: '!main'
+  - label: 'Lint and test'
+    branches: '*'
     commands:
-      - cicd/ci.sh
+      - cicd/ci-check-quality.sh
     agents:
-      queue: cti-lab
+      queue: oss-lab
